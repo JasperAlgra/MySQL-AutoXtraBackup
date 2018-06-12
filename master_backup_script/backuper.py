@@ -236,9 +236,24 @@ class Backup(GeneralClass):
                 else:
                     # Multi-core tar utilizing pigz.
                     # Pigz default to number of cores available, or 8 if cannot be read.
-                    run_tar = "tar cf - %s %s | pigz %s" % (
-                        self.full_dir, self.inc_dir, self.archive_dir + '/' + i + '.tar.gz')
+
+                    # Test if pigz is available.
+                    try:
+                        subprocess.call(["pigz", "-q"])
+                        run_tar = "tar cf - %s %s | pigz %s" % (
+                            self.full_dir, self.inc_dir, self.archive_dir + '/' + i + '.tar.gz')
+                    except OSError as e:
+                        if e.errno == os.errno.ENOENT:
+                            # handle file not found error.
+                            logger.warning("pigz executeable not available. Defaulting to singlecore tar")
+                            run_tar = "tar -zcf %s %s %s" % (
+                                self.archive_dir + '/' + i + '.tar.gz', self.full_dir, self.inc_dir)
+                        else:
+                            # Something else went wrong while trying to run `wget`
+                            raise RuntimeError("FAILED: Archiving -> {}".format(e))
+
                     logger.debug("Started to archive previous backups")
+                    logger.debug("The following backup command will be executed {}".format(run_tar))
 
                     status, output = subprocess.getstatusoutput(run_tar)
                     if status == 0:
@@ -794,7 +809,7 @@ class Backup(GeneralClass):
                 logger.warning("Streaming is enabled!")
 
             # filter out password from argument list
-                filteredargs = re.sub("--password='?\w+'?", "--password='*'", args)
+            filteredargs = re.sub("--password='?\w+'?", "--password='*'", args)
 
             logger.debug("The following backup command will be executed {}".format(filteredargs))
 
