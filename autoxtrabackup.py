@@ -17,8 +17,8 @@ from logging.handlers import RotatingFileHandler
 
 
 logger = logging.getLogger('')
-import pydevd
-pydevd.settrace('localhost', port=9876, stdoutToServer=True, stderrToServer=True)
+# import pydevd
+# pydevd.settrace('localhost', port=9876, stdoutToServer=True, stderrToServer=True)
 
 destinations_hash = {'linux':'/dev/log', 'linux2': '/dev/log', 'darwin':'/var/run/syslog'}
 
