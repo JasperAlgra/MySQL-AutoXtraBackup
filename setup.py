@@ -4,7 +4,7 @@ datafiles = [('//etc', ['general_conf/bck.conf'])]
 
 setup(
     name='mysql-autoxtrabackup',
-    version='1.5.2',
+    version='1.5.2-dev',
     packages=['general_conf', 'backup_prepare', 'partial_recovery', 'master_backup_script', 'prepare_env_test_mode'],
     package_data={
         'prepare_env_test_mode': ['*.sh', '*.sql']

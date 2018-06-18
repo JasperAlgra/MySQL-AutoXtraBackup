@@ -17,7 +17,8 @@ from logging.handlers import RotatingFileHandler
 
 
 logger = logging.getLogger('')
-
+import pydevd
+pydevd.settrace('localhost', port=9876, stdoutToServer=True, stderrToServer=True)
 
 destinations_hash = {'linux':'/dev/log', 'linux2': '/dev/log', 'darwin':'/var/run/syslog'}
 
@@ -45,7 +46,7 @@ def print_version(ctx, param, value):
     click.echo("Email: rzayev.shahriyar@yandex.com")
     click.echo(
         "Based on Percona XtraBackup: https://github.com/percona/percona-xtrabackup/")
-    click.echo('MySQL-AutoXtraBackup Version: 1.5.2')
+    click.echo('MySQL-AutoXtraBackup Version: 1.5.2-dev')
     ctx.exit()
 
 
