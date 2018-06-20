@@ -32,7 +32,7 @@ The [MySQL] category is for specifying information about MySQL instance.
 
 The [Backup] category is for specifying information about backup/prepare process itself.
 
-:: [Backup]
+::
 
     [Backup]
     #Optional: set pid directory
