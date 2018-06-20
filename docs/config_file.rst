@@ -63,11 +63,11 @@ The [Backup] category is for specifying information about backup/prepare process
 [Backup]
 
 - pid_dir
-  Directory where the PID file will be created in
+  Optional: Directory where the PID file will be created in
 - tmpdir
   Used for moving current running mysql-datadir to when copying-back (restoring) an archive
 - pid_runtime_warning
-  Throw exception when starting new backup and old backup PID is older than X hours
+  Optional: set warning if pid of backup us running for longer than X
 - backupdir
   Directory will be used for storing the backups. Subdirs ./full and ./inc will be created
 - backup_tool
@@ -84,6 +84,10 @@ The [Backup] category is for specifying information about backup/prepare process
   Optional: pass general additional options; it will go to both for backup and prepare
 - archive_dir
   Directory for storing archives (tar.gz or otherwise). Cannot be inside the 'backupdir' above
+- prepare_archive
+  ?
+- move_archive
+  When rotating backups to archive move instead of compressing with tar.gz
 - full_backup_interval
   Maximum interval after which a new full backup will be made
 - max_archive_size
