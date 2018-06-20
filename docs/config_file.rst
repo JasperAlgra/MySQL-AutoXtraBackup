@@ -1,16 +1,19 @@
 The structure of configuration file
-===================================
 
 Defaults file explained
------------------------
 
 The default config file is located /etc/bck.conf.
+
 The available options are divided into optional and primary options.
+
 Options are quite self-explanatory.
+
 I have tried to make them similar to existing options in XtraBackup and MySQL.
-You can use another configuration file using ``--defaults_file`` option.
+
+You can use another configuration file using --defaults_file option.
 
 Let's clarify the config file structure a bit.
+
 The [MySQL] category is for specifying information about MySQL instance.
 
 ::
@@ -27,10 +30,9 @@ The [MySQL] category is for specifying information about MySQL instance.
     mysql_port=3306
     datadir=/var/lib/mysql
 
-
 The [Backup] category is for specifying information about backup/prepare process itself.
 
-::
+:: [Backup]
 
     [Backup]
     #Optional: set pid directory
@@ -58,8 +60,43 @@ The [Backup] category is for specifying information about backup/prepare process
     #Optional WARNING(Enable this if you want to take partial backups). Specify database names or table names.
     #partial_list=test.t1 test.t2 dbtest
 
+[Backup]
+
+- pid_dir
+  Directory where the PID file will be created in
+- tmpdir
+  Used for moving current running mysql-datadir to when copying-back (restoring) an archive
+- pid_runtime_warning
+  Throw exception when starting new backup and old backup PID is older than X hours
+- backupdir
+  Directory will be used for storing the backups. Subdirs ./full and ./inc will be created
+- backup_tool
+  Full path to Percona xtrabackup executable used when making backup
+- prepare_tool
+  Full path to Percona xtrabackup executable used when preparing (restoring)
+- xtra_prepare
+  Options passed to xtrabackup when preparing. '--apply-log-only' is essential to allow further incremental backups to be made. See[1]
+- xtra_backup
+  Optional: pass additional options for backup stage
+- xtra_prepare_options
+  Optional: pass additional options for prepare stage
+- xtra_options
+  Optional: pass general additional options; it will go to both for backup and prepare
+- archive_dir
+  Directory for storing archives (tar.gz or otherwise). Cannot be inside the 'backupdir' above
+- full_backup_interval
+  Maximum interval after which a new full backup will be made
+- max_archive_size
+  Delete archived backups after X GiB
+- max_archive_duration
+  Delete archived backups after X Days
+- partial_list
+  Optional: WARNING(Enable this if you want to take partial backups). Specify database names or table names.
+
+
 
 The [Compress] category is for enabling backup compression.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -75,6 +112,7 @@ The options will be passed to XtraBackup.
     #remove_original=FALSE
 
 The [Encrypt] category is for enabling backup encryption.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -94,6 +132,7 @@ The options will be passed to XtraBackup.
     #remove_original=FALSE
 
 The [Xbstream] category is for enabling backup streaming.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -110,7 +149,6 @@ The options will be passed to XtraBackup.
     #xbs_decrypt=1
     # WARN, enable this, if you want to stream your backups to remote host
     #remote_stream=ssh xxx.xxx.xxx.xxx
-
 
 Deprecated feature, will be removed in next releases
 
@@ -132,6 +170,7 @@ The [Commands] category is for specifying some options for copy-back/restore act
     chown_command=chown -R mysql:mysql
 
 The [TestConf] category is part of XtraBackup testing procedures and is not for daily usage.
+
 So just ignore this, it is actually for myself :)
 
 ::
@@ -148,3 +187,7 @@ So just ignore this, it is actually for myself :)
     xb_configs=xb_2_4_ps_5_6.conf xb_2_4_ps_5_7.conf xb_2_3_ps_5_6.conf xb_2_3_ps_5_5.conf xb_2_4_ps_5_5.conf
     default_mysql_options=--log-bin=mysql-bin,--log-slave-updates,--server-id={},--gtid-mode=ON,--enforce-gtid-consistency,--binlog-format=row
     mysql_options=--innodb_buffer_pool_size=1G 2G 3G,--innodb_log_file_size=1G 2G 3G,--innodb_page_size=4K 8K 16K 32K 64K
+
+[1]: https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/incremental_backups.html#preparing-the-incremental-backups
+
+
