@@ -1,142 +1,108 @@
 The structure of configuration file
-===================================
 
 Defaults file explained
------------------------
 
 The default config file is located /etc/bck.conf.
+
 The available options are divided into optional and primary options.
+
 Options are quite self-explanatory.
+
 I have tried to make them similar to existing options in XtraBackup and MySQL.
-You can use another configuration file using ``--defaults_file`` option.
+
+You can use another configuration file using --defaults_file option.
 
 Let's clarify the config file structure a bit.
 
-### [MySQL]
+[MySQL]
 
 The [MySQL] category is for specifying information about MySQL instance.
 
 ::
 
-```ini
-[MySQL]
-mysql=/usr/bin/mysql
-mycnf=/etc/my.cnf
-mysqladmin=/usr/bin/mysqladmin
-mysql_user=root
-mysql_password=12345
-#Set either mysql_socket or host and post. If both are set socket is used
-#mysql_socket=/var/lib/mysql/mysql.sock
-mysql_host=127.0.0.1
-mysql_port=3306
-datadir=/var/lib/mysql
-```
+    [MySQL]
+    mysql=/usr/bin/mysql
+    mycnf=/etc/my.cnf
+    mysqladmin=/usr/bin/mysqladmin
+    mysql_user=root
+    mysql_password=12345
+    #Set either mysql_socket or host and post. If both are set socket is used
+    #mysql_socket=/var/lib/mysql/mysql.sock
+    mysql_host=127.0.0.1
+    mysql_port=3306
+    datadir=/var/lib/mysql
 
-### [Backup]
+[Backup]
 
 The [Backup] category is for specifying information about backup/prepare process itself.
 
 ::
 
-```ini
-[Backup]
-#Optional: set pid directory
-pid_dir=/tmp/MySQL-AutoXtraBackup
-tmpdir=/home/shahriyar.rzaev/XB_TEST/mysql_datadirs
-#Optional: set warning if pid of backup us running for longer than X
-pid_runtime_warning=2 Hours
-backupdir=/home/shahriyar.rzaev/XB_TEST/backup_dir
-backup_tool=/usr/bin/xtrabackup
-#Optional: specify different path/version of xtrabackup here for prepare
-#prepare_tool=
-xtra_prepare=--apply-log-only
-#Optional: pass additional options for backup stage
-#xtra_backup=--compact
-#Optional: pass additional options for prepare stage
-#xtra_prepare_options=--rebuild-indexes
-#Optional: pass general additional options; it will go to both for backup and prepare
-#xtra_options=--binlog-info=ON --galera-info
-xtra_options=--no-version-check
-#Optional: set archive and rotation
-#archive_dir=/home/shahriyar.rzaev/XB_TEST/backup_archives
-#full_backup_interval=1 day
-#max_archive_size=100GiB
-#max_archive_duration=4 Days
-#Optional WARNING(Enable this if you want to take partial backups). Specify database names or table names.
-#partial_list=test.t1 test.t2 dbtest
-```
+    [Backup]
+    #Optional: set pid directory
+    pid_dir=/tmp/MySQL-AutoXtraBackup
+    tmpdir=/home/shahriyar.rzaev/XB_TEST/mysql_datadirs
+    #Optional: set warning if pid of backup us running for longer than X
+    pid_runtime_warning=2 Hours
+    backupdir=/home/shahriyar.rzaev/XB_TEST/backup_dir
+    backup_tool=/usr/bin/xtrabackup
+    #Optional: specify different path/version of xtrabackup here for prepare
+    #prepare_tool=
+    xtra_prepare=--apply-log-only
+    #Optional: pass additional options for backup stage
+    #xtra_backup=--compact
+    #Optional: pass additional options for prepare stage
+    #xtra_prepare_options=--rebuild-indexes
+    #Optional: pass general additional options; it will go to both for backup and prepare
+    #xtra_options=--binlog-info=ON --galera-info
+    xtra_options=--no-version-check
+    #Optional: set archive and rotation
+    #archive_dir=/home/shahriyar.rzaev/XB_TEST/backup_archives
+    #full_backup_interval=1 day
+    #max_archive_size=100GiB
+    #max_archive_duration=4 Days
+    #Optional WARNING(Enable this if you want to take partial backups). Specify database names or table names.
+    #partial_list=test.t1 test.t2 dbtest
 
 - pid_dir
-
   Optional: Directory where the PID file will be created in
-
 - tmpdir
-
   Used for moving current running mysql-datadir to when copying-back (restoring) an archive
-
 - pid_runtime_warning
-
   Optional: set warning if pid of backup us running for longer than X
-
 - backupdir
-
   Directory will be used for storing the backups. Subdirs ./full and ./inc will be created
-
 - backup_tool
-
   Full path to Percona xtrabackup executable used when making backup
-
 - prepare_tool
-
   Full path to Percona xtrabackup executable used when preparing (restoring)
-
 - xtra_prepare
-
   Options passed to xtrabackup when preparing. '--apply-log-only' is essential to allow further incremental backups to be made. See[1]
-
 - xtra_backup
-
   Optional: pass additional options for backup stage
-
 - xtra_prepare_options
-
   Optional: pass additional options for prepare stage
-
 - xtra_options
-
   Optional: pass general additional options; it will go to both for backup and prepare
-
 - archive_dir
-
   Directory for storing archives (tar.gz or otherwise). Cannot be inside the 'backupdir' above
-
 - prepare_archive
-
   ?
-
 - move_archive
-
   When rotating backups to archive move instead of compressing with tar.gz
-
 - full_backup_interval
-
   Maximum interval after which a new full backup will be made
-
 - max_archive_size
-
   Delete archived backups after X GiB
-
 - max_archive_duration
-
   Delete archived backups after X Days
-
 - partial_list
-
   Optional: WARNING(Enable this if you want to take partial backups). Specify database names or table names.
 
-### [Compress]
+[Compress]
 
 The [Compress] category is for enabling backup compression.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -151,9 +117,10 @@ The options will be passed to XtraBackup.
     #Enable if you want to remove .qp files after decompression.(Not available yet, will be released with XB 2.3.7 and 2.4.6)
     #remove_original=FALSE
 
-### [Encrypt]
+[Encrypt]
 
 The [Encrypt] category is for enabling backup encryption.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -172,9 +139,10 @@ The options will be passed to XtraBackup.
     #Enable if you want to remove .qp files after decompression.(Not available yet, will be released with XB 2.3.7 and 2.4.6)
     #remove_original=FALSE
 
-### [Xbstream]
+[Xbstream]
 
 The [Xbstream] category is for enabling backup streaming.
+
 The options will be passed to XtraBackup.
 
 ::
@@ -192,7 +160,6 @@ The options will be passed to XtraBackup.
     # WARN, enable this, if you want to stream your backups to remote host
     #remote_stream=ssh xxx.xxx.xxx.xxx
 
-
 Deprecated feature, will be removed in next releases
 
 ::
@@ -202,7 +169,7 @@ Deprecated feature, will be removed in next releases
     #remote_conn=root@xxx.xxx.xxx.xxx
     #remote_dir=/home/sh/Documents
 
-### [Commands]
+[Commands]
 
 The [Commands] category is for specifying some options for copy-back/restore actions.
 
@@ -214,9 +181,10 @@ The [Commands] category is for specifying some options for copy-back/restore act
     #Change user:group respectively
     chown_command=chown -R mysql:mysql
 
-### [TestConf]
+[TestConf]
 
 The [TestConf] category is part of XtraBackup testing procedures and is not for daily usage.
+
 So just ignore this, it is actually for myself :)
 
 ::
@@ -235,4 +203,5 @@ So just ignore this, it is actually for myself :)
     mysql_options=--innodb_buffer_pool_size=1G 2G 3G,--innodb_log_file_size=1G 2G 3G,--innodb_page_size=4K 8K 16K 32K 64K
 
 [1]: https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/incremental_backups.html#preparing-the-incremental-backups
+
 
