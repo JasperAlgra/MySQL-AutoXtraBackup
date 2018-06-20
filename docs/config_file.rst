@@ -65,38 +65,55 @@ The [Backup] category is for specifying information about backup/prepare process
     #partial_list=test.t1 test.t2 dbtest
 
 - pid_dir
+
   Optional: Directory where the PID file will be created in
 - tmpdir
+
   Used for moving current running mysql-datadir to when copying-back (restoring) an archive
 - pid_runtime_warning
+
   Optional: set warning if pid of backup us running for longer than X
 - backupdir
+
   Directory will be used for storing the backups. Subdirs ./full and ./inc will be created
 - backup_tool
+
   Full path to Percona xtrabackup executable used when making backup
 - prepare_tool
+
   Full path to Percona xtrabackup executable used when preparing (restoring)
 - xtra_prepare
+
   Options passed to xtrabackup when preparing. '--apply-log-only' is essential to allow further incremental backups to be made. See[1]
 - xtra_backup
+
   Optional: pass additional options for backup stage
 - xtra_prepare_options
+
   Optional: pass additional options for prepare stage
 - xtra_options
+
   Optional: pass general additional options; it will go to both for backup and prepare
 - archive_dir
+
   Directory for storing archives (tar.gz or otherwise). Cannot be inside the 'backupdir' above
 - prepare_archive
+
   ?
 - move_archive
+
   When rotating backups to archive move instead of compressing with tar.gz
 - full_backup_interval
+
   Maximum interval after which a new full backup will be made
 - max_archive_size
+
   Delete archived backups after X GiB
 - max_archive_duration
+
   Delete archived backups after X Days
 - partial_list
+
   Optional: WARNING(Enable this if you want to take partial backups). Specify database names or table names.
 
 [Compress]
