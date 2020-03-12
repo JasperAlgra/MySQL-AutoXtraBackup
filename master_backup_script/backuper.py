@@ -9,6 +9,7 @@ import os
 import subprocess
 import shlex
 import shutil
+import sys
 import time
 
 from datetime import datetime
@@ -729,11 +730,15 @@ class Backup(GeneralClass):
 
                 # Taking fullbackup
                 if self.full_backup():
+                    logger.error("Full backup successful")
                     # Removing full backups
                     self.clean_full_backup_dir()
 
                     # Removing inc backups
                     self.clean_inc_backup_dir()
+                else:
+                    logger.error("Full backup failed")
+                    sys.exit(1)
 
             # Copying backups to remote server
             if hasattr(self, 'remote_conn') and hasattr(self, 'remote_dir') \
@@ -747,10 +752,14 @@ class Backup(GeneralClass):
                 self.full_backup_interval))
             logger.info("- - - - We will take an incremental one based on recent Full Backup - - - -")
 
-            time.sleep(3)
+            # time.sleep(3)
 
             # Taking incremental backup
-            self.inc_backup()
+            if self.inc_backup():
+                logger.info("Incremental backup successful")
+            else:
+                logger.error("Incremental backup failed")
+                sys.exit(1)
 
             # Copying backups to remote server
             if hasattr(self, 'remote_conn') and hasattr(self, 'remote_dir') \
